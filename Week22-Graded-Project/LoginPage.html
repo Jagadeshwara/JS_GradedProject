@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(169, 169, 169);
+            padding: 200px 150px;
+
+        }
+        form{
+            display: block;
+            flex-wrap: wrap;
+
+            width: 350px;
+            height: 170px;
+            background-color: yellow;
+            justify-content: flex-start;
+            align-items: stretch;
+            padding: 50px 20px 20px;
+            border-radius: 10px;
+            box-shadow: 0px 1px 7px 1px black;
+        }
+        form > input{
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0px 30px;
+            height: 30px;
+            font-size: large;
+
+        }
+        form > button{
+            margin-left: 130px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: medium;
+            background-color: #a1f1a2;
+        }
+    </style>
+</head>
+<body>
+    
+        <form id="loginform" method="post">
+            <input type="text" name="username" id="username" placeholder="User Name" required><br><br>
+            <input type="password" name="pwd" id="password" placeholder="Password" required><br>
+            <button type="submit">Login</button>
+        </form>
+<script type="module">
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.getElementById('loginform');
+            
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+            
+        if (username === 'admin' && password === 'password') {
+                        
+        localStorage.setItem('login username',username);
+        localStorage.setItem('login password',password);
+                        
+        window.location.href = 'resumefile.html';
+        } else {
+            alert('Invalid username/password');
+        }
+    });
+});
+</script>
+</body>
+</html>

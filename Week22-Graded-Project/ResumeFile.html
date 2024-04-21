@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Page</title>
+    <style>
+        .search-container{
+            align-content: center;
+            justify-content: center;
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            justify-content: space-evenly;
+        }
+        button{
+            padding: 6px;
+            margin-left: 10%;
+            margin-right: 10%;
+            font-size: large;
+        }
+        input{
+            padding: 6px;
+            font-size: large;
+            width: 200px;
+            margin-left: 5%;
+            margin-right: 5%;            
+        }
+        .search-container > #searchInput{
+            flex-grow: 1;
+            justify-content: center;
+            align-items: center;
+        }
+        .search-container #nextBtn{
+            justify-content: flex-end;
+        }
+        h4{
+            background-color: rgb(169, 169, 169);
+        }
+        
+    </style>
+</head>
+<body onload="fetchApplicants()">
+    <div class="search-container">
+            <button id="previousBtn" onclick="showPrevious()">Previous</button>
+            <label for="searchInput"></label>
+            <input type="text" id="searchInput" oninput="searchApplicants()" placeholder="search for keywords to filter the resume" />
+            <button id="nextBtn" onclick="showNext()">Next</button>
+    </div>
+    <div id="resume" onload="displayApplicant()">
+        <div id="header-body">
+            <div id="header">
+                
+            </div>
+            <div id="icon">
+                <img src="download.png" alt="">
+            </div>
+        </div>
+        <div id="resume-body">
+            <div id="info">
+                
+            </div>
+            <div id="res-body">
+
+            </div>
+        </div>
+    </div>
+    
+    <div class="message-box" id="noApplicantsBox" style="display: none; border: 2px solid black;">
+        <div style="display: flex; align-items: center;">
+            <p style="font-size: 100px; margin-right: 20px;">🙁</p>
+            <span>No such results found</span>
+        </div>
+    </div>
+    
+    <script>
+        //let applicants = [];
+        let filteredApplicants = [];
+        let index = 1;
+        let data = {};
+
+        const resumeBody = document.getElementById('resume');
+        resumeBody.style.border = '2px solid black';
+        resumeBody.style.height = 'auto';
+        resumeBody.style.margin = '1.5% 10%';
+        resumeBody.style.padding = '0px';
+
+        const HeaderBody = document.getElementById('header-body');
+        HeaderBody.style.display = 'flex';
+        HeaderBody.style.alignItems = 'space-between';
+        HeaderBody.style.height = '140px';
+        HeaderBody.style.backgroundColor = 'lightblue';
+
+
+        const applicationDetails = document.getElementById('header');
+            applicationDetails.style.height = '140px';
+            applicationDetails.style.width = '1200px';
+            applicationDetails.style.textAlign = 'center';
+            applicationDetails.style.padding = '0px 30px 0px 0px'
+        
+        const iconDiv = document.getElementById('icon');
+            iconDiv.style.alignItems = 'center';
+            iconDiv.style.backgroundColor = 'lightblue';
+            iconDiv.style.transition = '20px';
+            //iconDiv.style.position = 'relative';
+
+        const infoDiv = document.getElementById('info');
+            infoDiv.style.display = 'block';
+            infoDiv.style.textAlign[type="h4"] = 'right';
+            infoDiv.style.width = '180px';
+            infoDiv.style.height = 'max-content';
+            infoDiv.style.backgroundColor = 'lightpink';
+            infoDiv.style.margin = '15px 0px 15px 15px';
+            infoDiv.style.padding = '10px';
+
+        const BodyDetails = document.getElementById('resume-body');
+            BodyDetails.style.display = 'flex';
+            BodyDetails.style.alignItems = 'left';
+
+        const resBody = document.getElementById('res-body');
+            resBody.style.height = 'auto';
+            resBody.style.padding = '0px 10px';
+
+        const image = document.getElementsByTagName('img');
+
+        
+        function displayApplicant() {
+            const noApplicantsBox = document.getElementById('noApplicantsBox');
+            if (data.resume.length >= 0) {
+                if (index == 0) {
+                    document.getElementById('previousBtn').style.visibility = 'none'; 
+                } else {
+                    document.getElementById('previousBtn').style.display = 'inline-block';
+                }
+            } else {
+                document.querySelector('.search-container').style.display = 'flex';
+                noApplicantsBox.style.display = 'block'; 
+            }
+        }
+       
+        function searchApplicants() {
+            const searchInput = document.getElementById('searchInput').addEventListener('input',function(){
+                let searchValue = data.resume.work.Position;
+                if(searchInput == searchValue){
+                    searchValue = data.resume.id;
+                    searchValue = index;
+                   fetchApplicants();
+                }else{
+                    alert(noApplicantsBox);
+                }
+            });
+        }
+            
+        function showNext() {
+            if (index < data.resume.length) {
+                index++;
+                fetchApplicants();
+            }else if(index == data.resume.length){
+                fetchApplicants();
+                const nextBtn = document.getElementById('nextBtn');
+                nextBtn.style.display = 'none';
+            }
+        }
+        function showPrevious() {
+            if (index > 0) {
+                index--;
+                fetchApplicants();
+            }else if(index == 0){
+                fetchApplicants();
+                const prevBtn = document.getElementById('previousBtn');
+                prevBtn.style.display = 'none';
+            }
+        }
+        async function fetchApplicants() {
+
+            fetch('./Data.json')
+            .then((response) => response.json())
+            .then((json) => {
+            data = json;
+
+            // Display the content on the webpage.
+            applicationDetails.innerHTML = `<br><h2>${data.resume[index].basics.name}</h2><h3>Applied For : ${data.resume[index].basics.AppliedFor}</h3>`;
+
+            infoDiv.innerHTML = `<h4><b>Personal Information</b></h4><p>${data.resume[index].basics.phone}</p><p>${data.resume[index].basics.email}</p><p><a href="https://linkedin.com/${data.resume[index].basics.name}">${data.resume[index].basics.profiles.url = data.resume[index].basics.profiles.network}</a></p><h4><b>Technical Skills</b></h4><p>${data.resume[index].skills.keywords}</p><h4><b>Hobbies</b></h4><span>${data.resume[index].interests.hobbies}`;
+
+            resBody.innerHTML = `<h3>Work Experience in previous company</h3>
+            <p>&emsp;&emsp;&emsp;<b>Company Name: </b><span>${data.resume[index].work["Company Name"]}</span></p><p>&emsp;&emsp;&emsp;<b>Position: </b><span>${data.resume[index].work.Position}</span></p><p>&emsp;&emsp;&emsp;<b>Start Date: </b><span>${data.resume[index].work["Start Date"]}</span></p><p>&emsp;&emsp;&emsp;<b>End Date: </b><span>${data.resume[index].work["End Date"]}</span></p><p>&emsp;&emsp;&emsp;<b>Summary: </b><span>${data.resume[index].work.Summary}</span></p><h3>Projects</h3><p>&emsp;&emsp;&emsp;<b>${data.resume[index].projects.name}</b> : <span>${data.resume[index].projects.description}</span></p><h3>Education</h3><ul><li><b>UG: </b>${data.resume[index].education.UG.institute}, ${data.resume[index].education.UG.course}, ${data.resume[index].education.UG["Start Date"]}, ${data.resume[index].education.UG["End Date"]}, ${data.resume[index].education.UG.cgpa}</li><li><b>PU: </b>${data.resume[index].education["Senior Secondary"].institute}, ${data.resume[index].education["Senior Secondary"].cgpa}</li><li><b>High School: </b>${data.resume[index].education["High School"].institute}, ${data.resume[index].education["High School"].cgpa}</li></ul><h3>Internship</h3><ul><li><b>Company name: </b>${data.resume[index].Internship["Company Name"]}</li><li><b>Position: </b>${data.resume[index].Internship.Position}</li><li><b>Start Date: </b>${data.resume[index].Internship["Start Date"]}</li><li><b>End Date: </b>${data.resume[index].Internship["End Date"]}</li><li><b>Summary: </b>${data.resume[index].Internship.Summary}</li></ul><h3>Achievements</h3><ul><li>${data.resume[index].achievements.Summary}</li></ul>`;
+        });
+        }
+    </script>
+</body>
+</html>
